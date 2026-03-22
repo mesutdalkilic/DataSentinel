@@ -1,0 +1,6 @@
+@DataSentinel.Api_HostAddress = http://localhost:5207
+
+GET {{DataSentinel.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
