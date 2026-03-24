@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataSentinel | KVKK Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen">
+
+    <nav class="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
+                🛡️ DataSentinel
+            </h1>
+            <button onclick="fetchReports()" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg text-sm transition-all shadow-lg shadow-blue-500/20">
+                Yenile
+            </button>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
+                <p class="text-slate-400 text-sm">Toplam Tarama</p>
+                <h2 id="totalCount" class="text-3xl font-bold mt-1">-</h2>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl border-l-4 border-l-red-500">
+                <p class="text-slate-400 text-sm">Kritik Riskli</p>
+                <h2 id="criticalCount" class="text-3xl font-bold mt-1 text-red-400">-</h2>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl border-l-4 border-l-emerald-500">
+                <p class="text-slate-400 text-sm">Temiz Veri</p>
+                <h2 id="cleanCount" class="text-3xl font-bold mt-1 text-emerald-400">-</h2>
+            </div>
+        </div>
+
+        <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-2xl">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-900/50">
+                    <tr>
+                        <th class="p-4 font-semibold text-slate-300">Dosya Adı</th>
+                        <th class="p-4 font-semibold text-slate-300">Bulgu</th>
+                        <th class="p-4 font-semibold text-slate-300">Risk Skoru</th>
+                        <th class="p-4 font-semibold text-slate-300">AI Analizi</th>
+                    </tr>
+                </thead>
+                <tbody id="reportTable" class="divide-y divide-slate-700">
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        async function fetchReports() {
+            const res = await fetch('/api/sentinel/reports');
+            const data = await res.json();
+
+            const table = document.getElementById('reportTable');
+            table.innerHTML = data.map(r => `
+                <tr class="hover:bg-slate-700/50 transition-colors">
+                    <td class="p-4 font-medium text-blue-300">${r.fileName}</td>
+                    <td class="p-4"><code class="bg-slate-900 px-2 py-1 rounded text-pink-400 text-xs">${r.findings}</code></td>
+                    <td class="p-4">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold ${r.riskScore >= 7 ? 'bg-red-900/30 text-red-400' : 'bg-emerald-900/30 text-emerald-400'}">
+                            ${r.riskScore} / 10
+                        </span>
+                    </td>
+                    <td class="p-4 text-sm text-slate-400 max-w-md truncate" title="${r.aiSummary}">
+                        ${r.aiSummary.substring(0, 100)}...
+                    </td>
+                </tr>
+            `).join('');
+
+            document.getElementById('totalCount').innerText = data.length;
+            document.getElementById('criticalCount').innerText = data.filter(x => x.riskScore >= 7).length;
+            document.getElementById('cleanCount').innerText = data.filter(x => x.riskScore < 7).length;
+        }
+
+        fetchReports();
+    </script>
+</body>
+</html>
