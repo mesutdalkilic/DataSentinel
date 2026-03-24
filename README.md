@@ -1,6 +1,9 @@
-﻿# 🛡️ DataSentinel: AI-Powered KVKK Scanner
+﻿# 🛡️ DataSentinel: AI-Powered KVKK Scanner / Yapay Zeka Destekli KVKK Tarayıcı
 
-DataSentinel, PDF belgeleri içindeki Kişisel Verileri (PII) tespit eden ve **Gemini 3.1 Flash** AI modeli ile KVKK analizi yapan bir .NET Web API projesidir.
+DataSentinel, PDF belgeleri içindeki hassas/Kişisel Verileri (PII) tespit eden ve **Gemini 3.1 Flash** AI modeli ile KVKK risk analizi yapan bir .NET Web API projesidir.
+
+> [!TIP]
+> **Yeni Güncelleme:** Artık taramalarınızı 5000 portu üzerinden erişilebilen, modern **Tailwind CSS Dashboard** paneliyle görsel olarak takip edebilirsiniz! 🚀
 
 ## 🚀 Özellikler
 - **Regex Detection:** TCKN gibi kritik verileri otomatik tespit eder ve maskeler.
