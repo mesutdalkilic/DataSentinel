@@ -17,6 +17,15 @@ builder.Services.AddHostedService<ProcessingWorker>();
 
 var app = builder.Build();
 
+
+// Kullanýcý "Uploads" klasörünü elle oluþturmak zorunda kalmasýn diye uygulama ayaða kalkarken klasör kontrolü yapýlýr ve yoksa uygulama kendisi oluþturur
+var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+if (!Directory.Exists(uploadPath))
+{
+    Directory.CreateDirectory(uploadPath);
+}
+
+
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<SentinelDbContext>();
